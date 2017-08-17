@@ -1,0 +1,22 @@
+{
+  "name": "@danmasta/config",
+  "version": "1.0.0",
+  "author": "Daniel Smith <dannmasta@gmail.com>",
+  "description": "Configuration helper for node apps",
+  "keywords": [],
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/danmasta/config.git"
+  },
+  "devDependencies": {},
+  "engines": {
+    "npm": ">=3.0.0",
+    "node": ">=6.0.0"
+  },
+  "dependencies": {
+    "@danmasta/env": "git+https://7e8fc5131d136c215db6673fe1da32147bbe0a24:x-oauth-basic@github.com/danmasta/env.git",
+    "lodash": "^4.17.4"
+  }
+}
