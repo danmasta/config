@@ -6,11 +6,14 @@ const config = {};
 
 function init(){
 
-    ['default', env('NODE_ENV') || 'development'].map(file => {
+    // attempt to load config files, in order
+    ['default', env('NODE_ENV'), env('CONFIG_ID')].map(file => {
 
         try {
 
-            _.merge(config, require(path.resolve(`./config/${file}`)));
+            if(file){
+                _.merge(config, require(path.resolve(`./config/${file}`)));
+            }
 
         } catch(err) {
 
