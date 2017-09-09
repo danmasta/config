@@ -38,17 +38,6 @@ module.exports = {
 ```
 *If multiple files are found, they are merged in with the default configuration and values are over written. This means you only need to add properties that have changed between environments*
 
-## Best Practices
-This package is designed to simplify the changing configurations between multiple server environments. Imagine you have multiple application environments like so: `development`, `qa1`, `qa2`, `qa3`, `staging`, and `production`. You might only have a few variables that actually change between the environments, but you abstract everything as environment variables anyway, just to be consistent. This can be really confusing and time consuming to manage. It also is not checked in to source control, so becomes very easy to break something or delete a needed value forever, on accident.
-
-With this method you only ever need to set one (maybe two) environment variables: `NODE_ENV` and `CONFIG_ID`. With just those two variables, you can create any number of configuration profiles and help keep your servers/ containers as portable as possible. This also helps prepare for things like remote config, which I'll add more info on in the future.
-
-example:
-```bash
-NODE_ENV=production
-CONFIG_ID=qa1
-```
-
 ## Examples
 #### Set a property for two different environments
 ```javascript
