@@ -25,7 +25,8 @@ const config = require('@danmasta/config');
 This package will attempt to load configuration files in the following order:
 1. `./config/default`
 2. `./config/(NODE_ENV)`
-3. `./config/(CONFIG_ID)`
+3. `./config/(CONFIG_GROUP)`
+4. `./config/(CONFIG_ID)`
 
 Config files can be `.js` or `.json` and they should export a plain object. They should also be named to match the `NODE_ENV` variable (production.js for production, development.js for dev, etc)
 ```javascript

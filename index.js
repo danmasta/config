@@ -7,7 +7,7 @@ const config = {};
 function init(){
 
     // attempt to load config files, in order
-    ['default', env('NODE_ENV'), env('CONFIG_ID')].map(file => {
+    ['default', env('NODE_ENV'), env('CONFIG_GROUP'), env('CONFIG_ID')].map(file => {
 
         try {
 
