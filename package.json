@@ -16,7 +16,7 @@
     "node": ">=6.0.0"
   },
   "dependencies": {
-    "@danmasta/env": "git+https://7e8fc5131d136c215db6673fe1da32147bbe0a24:x-oauth-basic@github.com/danmasta/env.git",
+    "@danmasta/env": "^1.0.0",
     "lodash": "^4.17.4"
   }
 }
