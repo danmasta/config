@@ -26,7 +26,8 @@ This package will attempt to load configuration files in the following order:
 1. `./config/default`
 2. `./config/(NODE_ENV)`
 3. `./config/(CONFIG_GROUP)`
-4. `./config/(CONFIG_ID)`
+4. `./config/(CONFIG)`
+5. `./config/(CONFIG_ID)`
 
 Config files can be `.js` or `.json` and they should export a plain object. They should also be named to match the `NODE_ENV` variable (production.js for production, development.js for dev, etc)
 ```javascript
@@ -38,6 +39,13 @@ module.exports = {
 };
 ```
 *If multiple files are found, they are merged in with the default configuration and values are over written. This means you only need to add properties that have changed between environments*
+
+## CMD Args
+You can pass config names as cmd arguments also and they will be set as environment variables *before* config files are loaded. This means you can do things like
+```bash
+node app --env production --config staging
+```
+This will load both the production config and then the staging config. This makes it super easy to run and/or test your app with different configs in multiple environments.
 
 ## Examples
 #### Set a property for two different environments
