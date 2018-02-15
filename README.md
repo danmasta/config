@@ -74,8 +74,4 @@ config.redis.port // 6379
 *Config exports a plain javascript object, so you can just use dot notation to access any nested value*
 
 ## Contact
-If you have any questions feel free to get in touch:
-
-Name | Role | Email
------|------|------
-Daniel Smith | Engineer | dannmasta@gmail.com
+If you have any questions feel free to get in touch
