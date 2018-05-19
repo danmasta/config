@@ -1,6 +1,6 @@
 {
   "name": "@danmasta/config",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "author": "Daniel Smith <dannmasta@gmail.com>",
   "description": "Configuration helper for node apps",
   "keywords": [],
