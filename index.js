@@ -8,11 +8,14 @@ const argv = minimist(process.argv.slice(2));
 
 // recursively freeze an object and all of it's properties
 // returns an immutable, constant object that cannot be modified
-function deepFreeze(obj) {
+function deepFreeze(obj, cache) {
 
-    _.forIn(obj, val => {
-        if (_.isObjectLike(val)) {
-            deepFreeze(val);
+    cache = cache || new Map();
+
+    _.forIn(obj, (val, key) => {
+        if ((_.isPlainObject(val) || _.isArray(val)) && !cache.has(val)) {
+            cache.set(val);
+            deepFreeze(val, cache);
         }
     });
 
