@@ -3,31 +3,41 @@
   "version": "2.0.1",
   "author": "Daniel Smith <dannmasta@gmail.com>",
   "description": "Configuration helper for node apps",
-  "keywords": [],
+  "license": "MIT",
+  "keywords": [
+    "config"
+  ],
   "main": "index.js",
+  "typings": "index.d.ts",
+  "bin": {},
+  "files": [
+    "index.js",
+    "**/*.d.ts"
+  ],
   "scripts": {
-    "test": "mocha tests"
+    "test": "./node_modules/.bin/mocha tests",
+    "coverage": "./node_modules/.bin/nyc --reporter=lcov ./node_modules/.bin/mocha tests"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/danmasta/config.git"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.11.0",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-promise": "^3.7.0",
-    "eslint-plugin-standard": "^3.1.0",
-    "mocha": "^5.1.1"
+    "chai": "^4.3.6",
+    "eslint": "^8.12.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "mocha": "^9.2.2",
+    "nyc": "^15.1.0"
   },
   "engines": {
-    "npm": ">=3",
-    "node": ">=6"
+    "npm": ">=3"
   },
   "dependencies": {
-    "@danmasta/env": "^2.0.0",
-    "lodash": "^4.17.10",
-    "minimist": "^1.2.0"
+    "@danmasta/env": "^3.1.2",
+    "lodash": "^4.17.21",
+    "minimist": "^1.2.6"
   }
 }
