@@ -8,7 +8,7 @@ const argv = minimist(process.argv.slice(2));
 
 // recursively freeze an object and all of it's properties
 // returns an immutable, constant object that cannot be modified
-function deepFreeze(obj, cache) {
+function deepFreeze (obj, cache) {
 
     cache = cache || new Map();
 
@@ -26,7 +26,7 @@ function deepFreeze(obj, cache) {
 // loads config files from specified directory
 // attempts to load files in order based on
 // environment variable values
-function getConfigFromDir(dir) {
+function getConfigFromDir (dir) {
 
     const config = {};
 
@@ -55,7 +55,7 @@ function getConfigFromDir(dir) {
         configurable: false,
         writable: false,
         enumerable: false,
-        value: function(obj) {
+        value: function (obj) {
 
             if (_.isString(obj)) {
                 obj = require(path.resolve(obj));
@@ -72,7 +72,7 @@ function getConfigFromDir(dir) {
         configurable: false,
         writable: false,
         enumerable: false,
-        value: function(obj) {
+        value: function (obj) {
 
             if (_.isString(obj)) {
                 obj = require(path.resolve(obj));
@@ -91,13 +91,21 @@ function getConfigFromDir(dir) {
         value: getConfigFromDir
     });
 
+    // add config to default exports
+    Object.defineProperty(config, 'config', {
+        configurable: false,
+        writable: false,
+        enumerable: false,
+        value: config
+    });
+
     return deepFreeze(config);
 
 }
 
 // configure via cmd args
 // and env variables
-function init() {
+function init () {
 
     let dir = argv['config-dir'];
 
