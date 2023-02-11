@@ -30,7 +30,7 @@ const redis = require('redis');
 const client = redis.createClient(config.redis);
 ```
 
-## Config Files
+### Config Files
 This package will attempt to load configuration files in the following order:
 1. `./config/default`
 2. `./config/(NODE_ENV)`
@@ -49,7 +49,7 @@ module.exports = {
 ```
 *If multiple files are found, they are merged with the default configuration and values are over written. This means you only need to add properties that have changed between environments*
 
-## Options
+### Env Variable/ CMD Options
 Env Variable | Cmd Arg | Description
 -------------|---------|------------
 `CONFIG_DIR` | config-dir | Directory where config files are located. Default is `./config`
@@ -57,14 +57,17 @@ Env Variable | Cmd Arg | Description
 `CONFIG` | config | Useful for further specifying config values. Default is `undefined`
 `CONFIG_ID` | config-id | Useful for further specifying config values. Default is `undefined`
 
-### CMD Args
-You can pass config names as cmd arguments also and they will be set as environment variables *before* config files are loaded. This means you can do things like
+#### Example
+You can pass config names as cmd arguments or env variables and they will be set as environment variables *before* config files are loaded. This means you can do things like:
 ```bash
 node app --config staging
 ```
+```bash
+NODE_ENV=ci,CONFIG=staging node app
+```
 This will load both the default config and then the staging config. This makes it super easy to run and/or test your app with different configs in multiple environments
 
-## Methods
+### Methods
 Name | Description
 -----|------------
 `env(key, val?)` | Simple getter/setter for interacting with environment variables
@@ -75,6 +78,19 @@ Name | Description
 `loadFromDir(str)` | Loads data from a directory in a heirarchical order based on class instance settings, returns an immutable object
 `load()` | Loads data from a directory based on settings, returns an immutable object
 `resolve()` | Loads data from a directory based on settings, returns an immutable object
+
+### Options
+name | type | description
+-----|------|------------
+`enableArgv` | *`boolean`* | Whether or not to enable cli argv helper options. Default is `false`
+`enableEnv` | *`boolean`* | Whether or not to enable environment variable helper options. Default is `false`
+`setNodeEnv` | *`boolean`* | Whether or not to set the `NODE_ENV` environment variable if not set already. Default is `false`
+`configDir` | *`string`* | Directory to load configuration files from. Default is `path.resolve(process.cwd(), 'config')`
+`configGroup` | *`string`* | Name of the config group file to load. This is a middle config file loaded in the chain. Default is `undefined`
+`config` | *`string`* | Name of the config file to load. This is a middle config file loaded in the chain. Default is `undefined`
+`configId` | *`string`* | Name of the config ID to load. This is the last config file loaded so it's the most specific and will override all others in the chain. Default is `undefined`
+`defaultConfigFileName` | *`string`* | Name of the default configuration file to load. This is the first file loaded for everything. Default is `default`
+
 
 ## Safety
 All objects exported from this package are immutable and constant by default. This means all own, inherited, and nested properties cannot be changed. Any attempt to assign or overwrite a property on the config object after export will *`silently fail`*
@@ -117,6 +133,20 @@ const config = new Config({
 
 module.exports = config.resolve();
 ```
+
+#### Use env variables with config for ultimate flexibility
+```js
+const env = require('@danmasta/env');
+
+// ./config/default.js
+module.exports = {
+    redis: {
+        host: env('REDIS_HOST'),
+        port: env('REDIS_PORT')
+    }
+};
+```
+*You can now expose environment variables as native types and they become immutable as part of your config*
 
 ## Contact
 If you have any questions feel free to get in touch
