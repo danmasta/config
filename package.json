@@ -1,17 +1,20 @@
 {
   "name": "@danmasta/config",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "author": "Daniel Smith <dannmasta@gmail.com>",
   "description": "Configuration helper for node apps",
   "license": "MIT",
   "keywords": [
-    "config"
+    "config",
+    "immutable",
+    "env"
   ],
   "main": "index.js",
-  "typings": "index.d.ts",
+  "types": "index.d.ts",
   "bin": {},
   "files": [
     "index.js",
+    "lib/**/*",
     "**/*.d.ts"
   ],
   "scripts": {
@@ -23,21 +26,20 @@
     "url": "https://github.com/danmasta/config.git"
   },
   "devDependencies": {
-    "chai": "^4.3.6",
-    "eslint": "^8.12.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.26.0",
+    "chai": "^4.3.7",
+    "eslint": "^8.34.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "mocha": "^9.2.2",
+    "eslint-plugin-promise": "^6.1.1",
+    "mocha": "^10.2.0",
     "nyc": "^15.1.0"
   },
   "engines": {
     "npm": ">=3"
   },
   "dependencies": {
-    "@danmasta/env": "^3.1.2",
     "lodash": "^4.17.21",
-    "minimist": "^1.2.6"
+    "minimist": "^1.2.8"
   }
 }
