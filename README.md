@@ -6,11 +6,12 @@ Features:
 * Load `.js`, or `.json` files
 * Exports plain javascript objects
 * Safe by default
-* Config is immutable and constant
+* Exported config is immutable and constant
 * Flexible configuration via environment variables or cmd args
+* Helps prevent many config related bugs and vulnerabilities
 
 ## About
-We needed a better way to configure node apps. Other config packages out there were either too complex or not flexible enough. This package aims to be the simplest, most flexible config initializer possible.
+We needed a better way to configure node apps. Other config packages out there were either too complex or not flexible enough. This package aims to be the simplest, most flexible config initializer possible. This package also exports config at run time as an immutable constant object that cannot be modified. It helps prevent an entire class of possible hard to track down bugs from code that might accidentally or intentionally overwrite config values during execution. It can also help prevent a whole class of potential vulnerabilities via environment hijack/overwritting from bad dependecies. You can import env variables into your config files at startup time via this package and they now become immutable.
 
 ## Usage
 Add config as a dependency for your app and install via npm
@@ -37,7 +38,7 @@ This package will attempt to load configuration files in the following order:
 4. `./config/(CONFIG)`
 5. `./config/(CONFIG_ID)`
 
-Config files can be `.js` or `.json` and they should export a plain object. They should also be named to match the options variable they represent, ie: production.js for when `NODE_ENV=production` and development.js for when `NODE_ENV=development`, etc. If you had a `CONFIG_GROUP=eu` variable set, for example, then you would also want to have an eu.js file.
+Config files can be `.js` or `.json` and they should export a plain object. They should also be named to match the options variable they represent, eg: `production.js` for `NODE_ENV=production` and `development.js` for `NODE_ENV=development`, etc. If you had a `CONFIG_GROUP=eu` variable set, for example, then you would also want to have an `eu.js` file.
 ```javascript
 module.exports = {
     redis: {
@@ -52,7 +53,6 @@ module.exports = {
 Env Variable | Cmd Arg | Description
 -------------|---------|------------
 `CONFIG_DIR` | config-dir | Directory where config files are located. Default is `./config`
-`NODE_ENV` | env | Environment name to load base config for. Default is `development`
 `CONFIG_GROUP` | config-group | Config or process group name. Default is `undefined`
 `CONFIG` | config | Useful for further specifying config values. Default is `undefined`
 `CONFIG_ID` | config-id | Useful for further specifying config values. Default is `undefined`
@@ -60,21 +60,26 @@ Env Variable | Cmd Arg | Description
 ### CMD Args
 You can pass config names as cmd arguments also and they will be set as environment variables *before* config files are loaded. This means you can do things like
 ```bash
-node app --env production --config staging
+node app --config staging
 ```
-This will load both the production config and then the staging config. This makes it super easy to run and/or test your app with different configs in multiple environments.
+This will load both the default config and then the staging config. This makes it super easy to run and/or test your app with different configs in multiple environments
 
 ## Methods
 Name | Description
 -----|------------
-`_merge()` | Accepts a single argument as an object or file path string. If argument is a file path, it will load the file from `config-dir` and merge the contents with our current config, overwritting existing values. This function returns a local, immutable, constant copy of config, it will not modify the default config exports.
-`_defaults()` | Accepts a single argument as an object or file path string. If argument is a file path, it will load the file from `config-dir` and merge the contents with our current config, only adding values that resolve to undefined, it does not overwrite existing values. This function returns a local, immutable, constant copy of config, and will not modify the default config exports.
-`_from(dir)` | Loads config files from specified directory. Returns a local, immutable, constant config object. Will not modify default config exports. Useful for package authors who want to load config relative to their module's root directory vs the user's current working directory.
+`env(key, val?)` | Simple getter/setter for interacting with environment variables
+`argv(key)` | Simple getter function for argv variables
+`deepFreeze(obj)` | Recursively freezes an object to make it immutable
+`isUndefined(obj)` | Checks if a value is `undefined` or `'undefined'`
+`loadFromFile(str)` | Loads data from a file path resolved from `process.cwd`, returns a regular mutable object
+`loadFromDir(str)` | Loads data from a directory in a heirarchical order based on class instance settings, returns an immutable object
+`load()` | Loads data from a directory based on settings, returns an immutable object
+`resolve()` | Loads data from a directory based on settings, returns an immutable object
 
 ## Safety
-All objects exported from this package are immutable and constant by default. This means all own, inherited, and nested properties cannot be changed. Any attempt to assign or overwrite a property on the config object after export will silently fail.
+All objects exported from this package are immutable and constant by default. This means all own, inherited, and nested properties cannot be changed. Any attempt to assign or overwrite a property on the config object after export will *`silently fail`*
 
-If you need to extend the config object or add/change values, consider using the built in methods: `_defaults`, `_merge`, `_from`. These methods will create local copies of config that are also immutable.
+If you need to extend the config object or add/change values after initialization, you will have to create a new instance with your custom configuration and then call `load()` or `resolve()` and export that to your application
 
 ## Examples
 #### Set a property for two different environments
@@ -96,40 +101,21 @@ module.exports = {
 ```
 
 #### Get a property value
+*Config exports a plain javascript object, so you can just use dot notation to access any nested value*
 ```javascript
 config.redis.host // '127.0.0.1' in development
 config.redis.port // 6379
 ```
-*Config exports a plain javascript object, so you can just use dot notation to access any nested value*
 
-#### Load config from a specific directory
+#### Load config from a specific directory programatically
 ```javascript
-const config = require('config')._from(__dirname + '/config');
-```
+const Config = require('@danmasta/config/lib/config');
 
-#### Extend config with local values
-```javascript
-const config = require('config')._merge({
-    redis: {
-        host: 'localhost',
-        port: 6379
-    }
+const config = new Config({
+    configDir: '/test/config'
 });
-```
 
-#### Extend config with local values if they are undefined
-```javascript
-const config = require('config')._defaults({
-    redis: {
-        host: 'localhost',
-        port: 6379
-    }
-});
-```
-
-#### Extend config defaults with specified file contents
-```javascript
-const config = require('config')._defaults(__dirname + '/config/module');
+module.exports = config.resolve();
 ```
 
 ## Contact
