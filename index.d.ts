@@ -6,7 +6,9 @@ export interface ConfigDefaults {
     configGroup: string,
     config: string,
     configId: string,
-    defaultConfigFileName: string
+    defaultConfigFileName: string,
+    warn: boolean,
+    throw: boolean
 }
 
 type Subset<T> = Partial<{
