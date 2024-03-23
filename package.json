@@ -14,6 +14,7 @@
   "bin": {},
   "files": [
     "index.js",
+    "index.mjs",
     "lib/**/*",
     "**/*.d.ts"
   ],
