@@ -3,7 +3,7 @@ Configuration helper for node apps
 
 Features:
 * Easy to use
-* Load `.js`, or `.json` files
+* Load `.js`, `.json`, `.cjs`, or `.mjs` files
 * Exports plain javascript objects
 * Safe by default
 * Exported config is immutable and constant
@@ -38,7 +38,7 @@ This package will attempt to load configuration files in the following order:
 4. `./config/(CONFIG)`
 5. `./config/(CONFIG_ID)`
 
-Config files can be `.js` or `.json` and they should export a plain object. They should also be named to match the options variable they represent, eg: `production.js` for `NODE_ENV=production` and `development.js` for `NODE_ENV=development`, etc. If you had a `CONFIG_GROUP=eu` variable set, for example, then you would also want to have an `eu.js` file.
+Config files can be `.js`, `.json`, `.cjs`, or `.mjs` and they should export a plain object as default. They should also be named to match the options variable they represent, eg: `production.js` for `NODE_ENV=production` and `development.js` for `NODE_ENV=development`, etc. If you had a `CONFIG_GROUP=eu` variable set, for example, then you would also want to have an `eu.js` file.
 ```javascript
 module.exports = {
     redis: {
@@ -72,12 +72,10 @@ Name | Description
 -----|------------
 `env(key, val?)` | Simple getter/setter for interacting with environment variables
 `argv(key)` | Simple getter function for argv variables
-`deepFreeze(obj)` | Recursively freezes an object to make it immutable
-`isUndefined(obj)` | Checks if a value is `undefined` or `'undefined'`
-`loadFromFile(str)` | Loads data from a file path resolved from `process.cwd`, returns a regular mutable object
-`loadFromDir(str)` | Loads data from a directory in a heirarchical order based on class instance settings, returns an immutable object
-`load()` | Loads data from a directory based on settings, returns an immutable object
-`resolve()` | Loads data from a directory based on settings, returns an immutable object
+`resolveAsyncConditional(async)` | Loads config in a conditionally async manner. Returns a promise if any file requires `import` or async is set to `true`, otherwise a synchronous object. Useful for esm projects where import can be [conditionally async](https://github.com/nodejs/node/pull/51977)
+`resolveAsync()` | Loads config asynchronously. Returns a promise that resolves with an immutable object
+`resolve()` | Loads config synchronously. Returns an immutable object
+`load()` | Alias for `resolve()`
 
 ### Options
 name | type | description
@@ -85,7 +83,7 @@ name | type | description
 `enableArgv` | *`boolean`* | Whether or not to enable cli argv helper options. Default is `false`
 `enableEnv` | *`boolean`* | Whether or not to enable environment variable helper options. Default is `false`
 `setNodeEnv` | *`boolean`* | Whether or not to set the `NODE_ENV` environment variable if not set already. Default is `false`
-`configDir` | *`string`* | Directory to load configuration files from. Default is `path.resolve(process.cwd(), 'config')`
+`configDir` | *`string`* | Directory to load configuration files from. Default is `./config`
 `configGroup` | *`string`* | Name of the config group file to load. This is a middle config file loaded in the chain. Default is `undefined`
 `config` | *`string`* | Name of the config file to load. This is a middle config file loaded in the chain. Default is `undefined`
 `configId` | *`string`* | Name of the config ID to load. This is the last config file loaded so it's the most specific and will override all others in the chain. Default is `undefined`
@@ -95,7 +93,7 @@ name | type | description
 
 
 ## Safety
-All objects exported from this package are immutable and constant by default. This means all own, inherited, and nested properties cannot be changed. Any attempt to assign or overwrite a property on the config object after export will *`silently fail`*
+All objects exported from this package are immutable and constant by default. This means all own, inherited, and nested properties cannot be changed. Any attempt to assign or overwrite a property on the config object after export will [*`silently fail`*](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze#description)
 
 If you need to extend the config object or add/change values after initialization, you will have to create a new instance with your custom configuration and then call `load()` or `resolve()` and export that to your application
 
@@ -134,6 +132,18 @@ const config = new Config({
 });
 
 module.exports = config.resolve();
+```
+
+#### ESM
+If using with esm you can just export your configs as default
+```js
+// ./config/default.js
+export default {
+    redis: {
+        host: 'redis.example.com',
+        port: 6379
+    }
+};
 ```
 
 #### Use env variables with config for ultimate flexibility
