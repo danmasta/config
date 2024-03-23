@@ -1,8 +1,8 @@
 const Config = require('./lib/config');
 
 const config = new Config({
-    enableEnv: true,
-    enableArgv: true
+    enableArgv: true,
+    enableEnv: true
 });
 
-exports = module.exports = config.resolve();
+module.exports = config.resolve();
