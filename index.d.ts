@@ -1,32 +1,58 @@
-export interface ConfigDefaults {
+interface Defaults {
     enableArgv: boolean,
     enableEnv: boolean,
     setNodeEnv: boolean,
-    configDir: string,
-    configGroup: string,
+    dir: string,
+    group: string,
     config: string,
-    configId: string,
-    defaultConfigFileName: string,
+    id: string,
+    defaultFileName: string,
     warn: boolean,
     throw: boolean
+}
+
+interface FileResolverDefaults {
+    encoding: string,
+    dir: string,
+    files: string|string[]
 }
 
 type Subset<T> = Partial<{
     [P in keyof T]: T[P] extends object ? Subset<T[P]> : T[P]
 }>;
 
-export class Config {
-    constructor (opts?: Subset<ConfigDefaults>);
-    _opts: ConfigDefaults;
-    env (key: string, val?: any): any;
-    argv (key: string): string | undefined;
-    static deepFreeze (obj: object, cache: Map): object;
-    static isUndefined (val: any): boolean;
-    loadFromFile (file: string): object;
-    loadFromDir (dir: string): object;
-    load (): object;
-    resolve (): object;
+type FactoryFn = {
+    (opts?: Subset<Defaults>): Config;
 }
 
-declare const _config: Config;
-export default _config.resolve;
+declare class FileResolver {
+    constructor (opts?: Subset<FileResolverDefaults>);
+    opts: FileResolverDefaults;
+    refresh (opts?: Subset<FileResolverDefaults>): void;
+    resolvePath (str: string): string;
+    resolvePathIfExists (str: string): string;
+    requireImportOrRead (str: str): Promise<object>|object;
+    resolveConditional (async?: boolean): Promise<object[]>|object[];
+    resolve (): object[];
+    resolveAsync (): Promise<object[]>;
+    getFileList (): object[];
+    formatSettledFiles (arr: object[]): object[];
+}
+
+export class Config {
+    constructor (opts?: Subset<Defaults>);
+    opts: Defaults;
+    resolver: FileResolver;
+    getRefreshOpts (): object;
+    refreshResolver (): void;
+    resolveConditional (async?: boolean): Promise<object>|object;
+    resolve (): object;
+    resolveAsync (): Promise<object>;
+    handleError (err: Error): void;
+    static get defaults(): Defaults;
+    static factory (...args?: unknown[]): FactoryFn;
+}
+
+export const config: Config;
+
+export default config.resolveConditional();
