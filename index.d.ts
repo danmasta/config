@@ -37,6 +37,7 @@ declare class FileResolver {
     resolveAsync (): Promise<object[]>;
     getFileList (): object[];
     formatSettledFiles (arr: object[]): object[];
+    static get defaults (): FileResolverDefaults;
 }
 
 export class Config {
@@ -49,7 +50,7 @@ export class Config {
     resolve (): object;
     resolveAsync (): Promise<object>;
     handleError (err: Error): void;
-    static get defaults(): Defaults;
+    static get defaults (): Defaults;
     static factory (...args?: unknown[]): FactoryFn;
 }
 
