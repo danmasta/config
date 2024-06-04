@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     test1: true,
     test2: false,
     test3: 100,

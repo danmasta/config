@@ -1,18 +1,17 @@
-const path = require('path');
+import { assert, expect, should } from 'chai';
+import { env } from 'node:process';
+import Config from '../lib/config.js';
 
-process.env.CONFIG_DIR = path.join(__dirname, 'config');
-process.env.NODE_ENV = 'test';
+env.CONFIG_DIR='./tests/config';
+env.NODE_ENV='test';
 
-const Config = require('../lib/config');
-const config = require('../index');
+const conf = await new Config().resolve();
 
 beforeEach(() => {
-    return import('chai').then(chai => {
-        global.assert = chai.assert;
-        global.expect = chai.expect;
-        global.should = chai.should();
-        global.Config = Config;
-        global.config = config;
-        global.path = path;
-    });
+    global.assert = assert;
+    global.expect = expect;
+    global.should = should();
+    global.Config = Config;
+    global.conf = conf;
+    global.config = conf;
 });
