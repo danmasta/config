@@ -8,13 +8,14 @@ interface Defaults {
     id: string,
     defaultFileName: string,
     warn: boolean,
-    throw: boolean
+    throw: boolean,
+    ext: string|string[]
 }
 
 interface FileResolverDefaults {
-    encoding: string,
     dir: string,
-    files: string|string[]
+    files: string|string[],
+    ext: string|string[]
 }
 
 type Subset<T> = Partial<{
@@ -29,14 +30,8 @@ declare class FileResolver {
     constructor (opts?: Subset<FileResolverDefaults>);
     opts: FileResolverDefaults;
     refresh (opts?: Subset<FileResolverDefaults>): void;
-    resolvePath (str: string): string;
-    resolvePathIfExists (str: string): string;
-    requireImportOrRead (str: str): Promise<object>|object;
-    resolveConditional (async?: boolean): Promise<object[]>|object[];
-    resolve (): object[];
-    resolveAsync (): Promise<object[]>;
-    getFileList (): object[];
-    formatSettledFiles (arr: object[]): object[];
+    async resolve (): object[];
+    resolveSync (): object[];
     static get defaults (): FileResolverDefaults;
 }
 
@@ -46,14 +41,15 @@ export class Config {
     resolver: FileResolver;
     getRefreshOpts (): object;
     refreshResolver (): void;
-    resolveConditional (async?: boolean): Promise<object>|object;
-    resolve (): object;
-    resolveAsync (): Promise<object>;
+    async resolve (): object;
+    resolveSync (): object;
     handleError (err: Error): void;
     static get defaults (): Defaults;
     static factory (...args?: unknown[]): FactoryFn;
 }
 
-export const config: Config;
+declare const conf: Config.resolve;
 
-export default config.resolveConditional();
+export {
+    conf as default, conf, conf as config, Config
+};
