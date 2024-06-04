@@ -1,10 +1,18 @@
-module.exports = {
-    'env': {
-        'es6': true,
-        'node': true
+export default {
+    languageOptions: {
+        ecmaVersion: 'latest'
     },
-    'extends': 'eslint:recommended',
-    'rules': {
+    env: {
+        es6: true,
+        node: true
+    },
+    extends: [
+        'eslint:recommended',
+        'plugin:import/recommended',
+        'plugin:node/recommended',
+        'plugin:promise/recommended'
+    ],
+    rules: {
         'indent': [
             'error',
             4,
