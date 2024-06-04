@@ -1,8 +1,7 @@
-const Config = require('./lib/config');
+import Config from './lib/config.js';
 
-const config = new Config({
-    enableEnv: true,
-    enableArgv: true
-});
+const conf = await new Config().resolve();
 
-module.exports = config.resolve();
+export {
+    conf as default, conf, conf as config, Config
+};
