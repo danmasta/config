@@ -7,10 +7,7 @@ export default {
         node: true
     },
     extends: [
-        'eslint:recommended',
-        'plugin:import/recommended',
-        'plugin:node/recommended',
-        'plugin:promise/recommended'
+        'eslint:recommended'
     ],
     rules: {
         'indent': [
