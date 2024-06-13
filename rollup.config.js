@@ -4,8 +4,7 @@ export default [
     {
         input: [
             'index.cjs',
-            'lib/config.js',
-            'lib/resolver.js'
+            'lib/config.js'
         ],
         output: {
             dir: 'dist/cjs',
