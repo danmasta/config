@@ -12,12 +12,6 @@ interface Defaults {
     ext: string|string[]
 }
 
-interface FileResolverDefaults {
-    dir: string,
-    files: string|string[],
-    ext: string|string[]
-}
-
 type Subset<T> = Partial<{
     [P in keyof T]: T[P] extends object ? Subset<T[P]> : T[P]
 }>;
@@ -26,23 +20,15 @@ type FactoryFn = {
     (opts?: Subset<Defaults>): Config;
 }
 
-declare class FileResolver {
-    constructor (opts?: Subset<FileResolverDefaults>);
-    opts: FileResolverDefaults;
-    refresh (opts?: Subset<FileResolverDefaults>): void;
-    async resolve (): object[];
-    resolveSync (): object[];
-    static get defaults (): FileResolverDefaults;
-}
-
 export class Config {
     constructor (opts?: Subset<Defaults>);
     opts: Defaults;
-    resolver: FileResolver;
-    getRefreshOpts (): object;
-    refreshResolver (): void;
+    refreshOpts (): void;
+    getFileList (): string[];
     async resolve (): object;
     resolveSync (): object;
+    async resolveFiles (): object[];
+    resolveFilesSync (): object[];
     handleError (err: Error): void;
     static get defaults (): Defaults;
     static factory (...args?: unknown[]): FactoryFn;
