@@ -1,7 +1,6 @@
 var lo = require('@danmasta/lo');
 var errors = require('@danmasta/lo/errors');
 var minimist = require('minimist');
-var resolver = require('./resolver.cjs');
 
 const argv = minimist(process.argv.slice(2));
 
@@ -26,75 +25,68 @@ class Config {
         if (opts.setNodeEnv) {
             lo.env('NODE_ENV', 'development');
         }
-        this.refreshResolver();
+        this.refreshOpts();
     }
 
-    // Resolve options in order of: local var, env var, argv
-    getRefreshOpts () {
+    // Update opts with env and argv values
+    refreshOpts () {
         let opts = this.opts;
-        let args = {
-            dir: {
-                argv: 'config-dir',
+        let args = [
+            {
+                key: 'dir',
+                arg: 'config-dir',
                 env: 'CONFIG_DIR'
             },
-            group: {
-                argv: 'config-group',
+            {
+                key: 'group',
+                arg: 'config-group',
                 env: 'CONFIG_GROUP'
             },
-            config: {
-                argv: 'config',
+            {
+                key: 'config',
+                arg: 'config',
                 env: 'CONFIG'
             },
-            id: {
-                argv: 'config-id',
+            {
+                key: 'id',
+                arg: 'config-id',
                 env: 'CONFIG_ID'
             }
-        };
-        let res = {};
-        lo.forOwn(args, (opt, key) => {
-            if (lo.hasOwn(opts, key)) {
-                res[key] = opts[key];
-            }
+        ];
+        lo.each(args, arg => {
             if (opts.enableEnv) {
-                if (lo.notNil(lo.env(opt.env))) {
-                    res[key] = lo.env(opt.env);
+                if (lo.notNil(lo.env(arg.env))) {
+                    opts[arg.key] = lo.env(arg.env);
                 }
             }
             if (opts.enableArgv) {
-                if (lo.notNil(argv[opt.argv])) {
-                    res[key] = argv[opt.argv];
+                if (lo.notNil(argv[arg.arg])) {
+                    opts[arg.key] = argv[arg.arg];
                 }
             }
         });
-        res.files = lo.compact([
-            opts.defaultFileName,
-            lo.env('NODE_ENV'),
-            res.group,
-            res.config,
-            res.id
-        ]);
-        res.ext = opts.ext;
-        return res;
     }
 
-    // Refresh file resolver or create
-    refreshResolver () {
-        if (!this.resolver) {
-            this.resolver = new resolver(this.getRefreshOpts());
-        } else {
-            this.resolver.refresh(this.getRefreshOpts());
-        }
+    getFileList () {
+        let { defaultFileName, group, config, id, ext } = this.opts;
+        ext = lo.concat(ext).at(0);
+        return lo.mapNotNil([
+            defaultFileName,
+            lo.env('NODE_ENV'),
+            group,
+            config,
+            id
+        ], str => {
+            if (!str.endsWith(ext)) {
+                return str.concat(ext);
+            }
+            return str;
+        });
     }
 
     async resolve () {
         let conf = {};
-        let files = await this.resolver.resolve();
-        // Need to double check the state here for cases when
-        // env is also loading asynchronously
-        // this.refreshResolver();
-        // if (files.length !== this.resolver.opts.files.length) {
-        //     files = await this.resolver.resolve();
-        // }
+        let files = await this.resolveFiles();
         lo.eachNotNil(files, file => {
             if (file.error) {
                 this.handleError(file.error);
@@ -111,7 +103,7 @@ class Config {
 
     resolveSync () {
         let conf = {};
-        let files = this.resolver.resolveSync();
+        let files = this.resolveFilesSync();
         lo.eachNotNil(files, file => {
             if (file.error) {
                 this.handleError(file.error);
@@ -120,6 +112,46 @@ class Config {
             }
         });
         return lo.freeze(conf);
+    }
+
+    async resolveFiles () {
+        let { dir, ext } = this.opts;
+        let files = this.getFileList();
+        return await lo.mapNotNil(files, async str => {
+            let file, contents, error;
+            try {
+                file = await lo.resolvePathIfExists(str, { dir, ext });
+                contents = await lo.importOrRequire(file);
+            } catch (err) {
+                error = err;
+            }
+            return {
+                path: file,
+                original: str,
+                contents,
+                error
+            }
+        });
+    }
+
+    resolveFilesSync () {
+        let { dir, ext } = this.opts;
+        let files = this.getFileList();
+        return lo.mapNotNil(files, str => {
+            let file, contents, error;
+            try {
+                file = lo.resolvePathIfExistsSync(str, { dir, ext });
+                contents = lo.require(file);
+            } catch (err) {
+                error = err;
+            }
+            return {
+                path: file,
+                original: str,
+                contents,
+                error
+            }
+        });
     }
 
     handleError (err) {
