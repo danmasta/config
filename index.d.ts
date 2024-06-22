@@ -9,7 +9,7 @@ interface Defaults {
     defaultFileName: string,
     warn: boolean,
     throw: boolean,
-    ext: string|string[]
+    exts: string|string[]
 }
 
 type Subset<T> = Partial<{
@@ -27,11 +27,9 @@ export class Config {
     getFileList (): string[];
     async resolve (): object;
     resolveSync (): object;
-    async resolveFiles (): object[];
-    resolveFilesSync (): object[];
     handleError (err: Error): void;
     static get defaults (): Defaults;
-    static factory (...args?: unknown[]): FactoryFn;
+    static factory (): FactoryFn;
 }
 
 declare const conf: Config.resolve;
