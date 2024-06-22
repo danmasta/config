@@ -44,7 +44,7 @@ name | type | description
 `defaultFileName` | *`string`* | Name of the default configuration file to load. This is the first file loaded for everything. Default is `default`
 `warn` | *`boolean`* | If true will write a message to `stderr` when a config file is not found. Default is `false`
 `throw` | *`boolean`* | If true will throw an error when a config file is not found. Default is `false`
-`ext` | *`string\|array`* | Which file extensions to use during file lookup. Default is `['.js', '.json', '.cjs', '.mjs']`
+`exts` | *`string\|array`* | Which file extensions to use during file lookup. Default is `['.js', '.json', '.cjs', '.mjs']`
 
 ### Methods
 Name | Description
