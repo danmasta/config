@@ -15,7 +15,7 @@ const defs = {
     defaultFileName: 'default',
     warn: false,
     throw: false,
-    ext: ['.js', '.json', '.cjs', '.mjs']
+    exts: ['.js', '.json', '.cjs', '.mjs']
 };
 
 class Config {
@@ -68,8 +68,8 @@ class Config {
     }
 
     getFileList () {
-        let { defaultFileName, group, config, id, ext } = this.opts;
-        ext = lo.concat(ext).at(0);
+        let { defaultFileName, group, config, id, exts } = this.opts;
+        let ext = lo.concat(exts).at(0);
         return lo.mapNotNil([
             defaultFileName,
             lo.env('NODE_ENV'),
@@ -85,73 +85,37 @@ class Config {
     }
 
     async resolve () {
-        let conf = {};
-        let files = await this.resolveFiles();
-        lo.eachNotNil(files, file => {
-            if (file.error) {
-                this.handleError(file.error);
+        let res = {};
+        let { dir, exts } = this.opts;
+        let paths = this.getFileList();
+        let files = await lo.importOrRequireFiles(paths, { dir, exts });
+        lo.eachNotNil(files, ({ error, contents }) => {
+            if (error) {
+                this.handleError(error);
             } else {
-                if (lo.isModule(file.contents)) {
-                    lo.merge(conf, file.contents.default);
+                if (lo.isModule(contents)) {
+                    lo.merge(res, contents.default);
                 } else {
-                    lo.merge(conf, file.contents);
+                    lo.merge(res, contents);
                 }
             }
         });
-        return lo.freeze(conf);
+        return lo.freeze(res);
     }
 
     resolveSync () {
-        let conf = {};
-        let files = this.resolveFilesSync();
-        lo.eachNotNil(files, file => {
-            if (file.error) {
-                this.handleError(file.error);
+        let res = {};
+        let { dir, exts } = this.opts;
+        let paths = this.getFileList();
+        let files = lo.requireFiles(paths, { dir, exts });
+        lo.eachNotNil(files, ({ error, contents }) => {
+            if (error) {
+                this.handleError(error);
             } else {
-                lo.merge(conf, file.contents);
+                lo.merge(res, contents);
             }
         });
-        return lo.freeze(conf);
-    }
-
-    async resolveFiles () {
-        let { dir, ext } = this.opts;
-        let files = this.getFileList();
-        return await lo.mapNotNil(files, async str => {
-            let file, contents, error;
-            try {
-                file = await lo.resolvePathIfExists(str, { dir, ext });
-                contents = await lo.importOrRequire(file);
-            } catch (err) {
-                error = err;
-            }
-            return {
-                path: file,
-                original: str,
-                contents,
-                error
-            }
-        });
-    }
-
-    resolveFilesSync () {
-        let { dir, ext } = this.opts;
-        let files = this.getFileList();
-        return lo.mapNotNil(files, str => {
-            let file, contents, error;
-            try {
-                file = lo.resolvePathIfExistsSync(str, { dir, ext });
-                contents = lo.require(file);
-            } catch (err) {
-                error = err;
-            }
-            return {
-                path: file,
-                original: str,
-                contents,
-                error
-            }
-        });
+        return lo.freeze(res);
     }
 
     handleError (err) {
@@ -162,7 +126,7 @@ class Config {
                 throw err;
             }
             if (this.opts.warn) {
-                console.warn(`${err.name}: ${err.message}`);
+                console.warn(err);
             }
         }
     }
