@@ -13,6 +13,7 @@ const defs = {
     config: undefined,
     id: undefined,
     defaultFileName: 'default',
+    defaultNodeEnv: 'development',
     warn: false,
     throw: false,
     exts: ['.js', '.json', '.cjs', '.mjs']
@@ -23,7 +24,7 @@ class Config {
     constructor (opts) {
         this.opts = opts = lo.defaults(opts, defs);
         if (opts.setNodeEnv) {
-            lo.env('NODE_ENV', 'development');
+            lo.env('NODE_ENV', opts.defaultNodeEnv);
         }
         this.refreshOpts();
     }
@@ -87,11 +88,11 @@ class Config {
     async resolve () {
         let res = {};
         let { dir, exts } = this.opts;
-        let paths = this.getFileList();
-        let files = await lo.importOrRequireFiles(paths, { dir, exts });
-        lo.eachNotNil(files, ({ error, contents }) => {
-            if (error) {
-                this.handleError(error);
+        let files = this.getFileList();
+        files = await lo.importOrRequireFiles(files, { dir, exts });
+        lo.eachNotNil(files, ({ err, contents }) => {
+            if (err) {
+                this.handleError(err);
             } else {
                 if (lo.isModule(contents)) {
                     lo.merge(res, contents.default);
@@ -106,11 +107,11 @@ class Config {
     resolveSync () {
         let res = {};
         let { dir, exts } = this.opts;
-        let paths = this.getFileList();
-        let files = lo.requireFiles(paths, { dir, exts });
-        lo.eachNotNil(files, ({ error, contents }) => {
-            if (error) {
-                this.handleError(error);
+        let files = this.getFileList();
+        files = lo.requireFiles(files, { dir, exts });
+        lo.eachNotNil(files, ({ err, contents }) => {
+            if (err) {
+                this.handleError(err);
             } else {
                 lo.merge(res, contents);
             }
