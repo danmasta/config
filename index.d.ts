@@ -7,6 +7,7 @@ interface Defaults {
     config: string,
     id: string,
     defaultFileName: string,
+    defaultNodeEnv: string,
     warn: boolean,
     throw: boolean,
     exts: string|string[]
@@ -20,19 +21,19 @@ type FactoryFn = {
     (opts?: Subset<Defaults>): Config;
 }
 
-export class Config {
+declare class Config {
     constructor (opts?: Subset<Defaults>);
     opts: Defaults;
     refreshOpts (): void;
     getFileList (): string[];
-    async resolve (): object;
+    resolve (): Promise<object>;
     resolveSync (): object;
     handleError (err: Error): void;
     static get defaults (): Defaults;
     static factory (): FactoryFn;
 }
 
-declare const conf: Config.resolve;
+declare const conf: Awaited<Promise<object>>;
 
 export {
     conf as default, conf, conf as config, Config
