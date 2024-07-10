@@ -41,7 +41,7 @@
     "url": "https://github.com/danmasta/config.git"
   },
   "dependencies": {
-    "@danmasta/lo": "github:danmasta/lo#47b95aa",
+    "@danmasta/lo": "github:danmasta/lo#7fc28a0",
     "minimist": "^1.2.8"
   },
   "devDependencies": {
