@@ -42,6 +42,7 @@ name | type | description
 `config` | *`string`* | Name of the config file to load. This is a middle config file loaded in the chain. Default is `undefined`
 `id` | *`string`* | Name of the config ID to load. This is the last config file loaded so it's the most specific and will override all others in the chain. Default is `undefined`
 `defaultFileName` | *`string`* | Name of the default configuration file to load. This is the first file loaded for everything. Default is `default`
+`defaultNodeEnv` | *`string`* | Which env name to use if `setNodeEnv` is enabled. Default is `'development'`
 `warn` | *`boolean`* | If true will write a message to `stderr` when a config file is not found. Default is `false`
 `throw` | *`boolean`* | If true will throw an error when a config file is not found. Default is `false`
 `exts` | *`string\|array`* | Which file extensions to use during file lookup. Default is `['.js', '.json', '.cjs', '.mjs']`
