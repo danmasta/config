@@ -36,7 +36,7 @@ name | type | description
 -----|------|------------
 `enableArgv` | *`boolean`* | Whether or not to enable cli argv helper options. Default is `true`
 `enableEnv` | *`boolean`* | Whether or not to enable environment variable helper options. Default is `true`
-`setNodeEnv` | *`boolean`* | Whether or not to set the `NODE_ENV` environment variable if not set already. Default is `false`
+`setNodeEnv` | *`boolean`* | Whether or not to set the `NODE_ENV` environment variable if not already set. Default is `false`
 `dir` | *`string`* | Directory to load configuration files from. Default is `./config`
 `group` | *`string`* | Name of the config group file to load. This is a middle config file loaded in the chain. Default is `undefined`
 `config` | *`string`* | Name of the config file to load. This is a middle config file loaded in the chain. Default is `undefined`
