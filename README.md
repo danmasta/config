@@ -146,5 +146,8 @@ export default {
 ```
 *You can now expose environment variables as native types and they become immutable as part of your config*
 
+## Testing
+Tests are currently run using mocha and chai. To execute tests run `make test`. To generate unit test coverage reports run `make coverage`
+
 ## Contact
 If you have any questions feel free to get in touch
