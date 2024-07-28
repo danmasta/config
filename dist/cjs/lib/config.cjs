@@ -1,8 +1,7 @@
 var lo = require('@danmasta/lo');
 var errors = require('@danmasta/lo/errors');
-var minimist = require('minimist');
 
-const argv = minimist(process.argv.slice(2));
+const argv = lo.parseArgv(lo.ARGV.slice(2));
 
 const defs = {
     enableArgv: true,
@@ -32,7 +31,7 @@ class Config {
     // Update opts with env and argv values
     refreshOpts () {
         let opts = this.opts;
-        let args = [
+        lo.each([
             {
                 key: 'dir',
                 arg: 'config-dir',
@@ -53,8 +52,7 @@ class Config {
                 arg: 'config-id',
                 env: 'CONFIG_ID'
             }
-        ];
-        lo.each(args, arg => {
+        ], arg => {
             if (opts.enableEnv) {
                 if (lo.notNil(lo.env(arg.env))) {
                     opts[arg.key] = lo.env(arg.env);
