@@ -10,6 +10,7 @@ Configuration helper for node apps
 * Flexible configuration via environment variables or cmd args
 * Helps prevent many config related bugs and vulnerabilities
 * Native esm and cjs support
+* 0 external dependencies
 
 ## About
 I wanted a better way to configure node apps. Other config packages out there were either too complex or not flexible enough. This package aims to be the simplest, most flexible config initializer possible. This package exports config at run time as an immutable constant object that cannot be modified. It helps prevent an entire class of possible hard to track down bugs from code that might accidentally or intentionally overwrite config values during execution. It can also help prevent a whole class of potential vulnerabilities via environment hijack/overwritting from bad dependecies. You can import env variables into your config files at startup time via this package and they now become immutable.
