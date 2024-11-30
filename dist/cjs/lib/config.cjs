@@ -1,5 +1,5 @@
-var lo = require('@danmasta/lo');
-var errors = require('@danmasta/lo/errors');
+var lo = require('lo');
+var errors = require('lo/errors');
 
 const argv = lo.parseArgv(lo.ARGV.slice(2));
 
