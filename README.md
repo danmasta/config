@@ -20,7 +20,7 @@ Add config as a dependency for your app and install via npm
 ```bash
 npm install config@danmasta/config --save
 ```
-Install a specific version
+Install a specific [version](https://github.com/danmasta/config/tags)
 ```bash
 npm install config@danmasta/config#v5.2.0 --save
 ```
