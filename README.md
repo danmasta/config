@@ -18,12 +18,16 @@ I wanted a better way to configure node apps. Other config packages out there we
 ## Usage
 Add config as a dependency for your app and install via npm
 ```bash
-npm install @danmasta/config --save
+npm install config@danmasta/config --save
+```
+Install a specific version
+```bash
+npm install config@danmasta/config#v5.2.0 --save
 ```
 
 Import or require the package in your app
 ```js
-import config from '@danmasta/config';
+import config from 'config';
 ```
 
 Get values
@@ -124,7 +128,7 @@ config.redis.port // 6379
 
 #### Load config from a specific directory programatically
 ```js
-import { Config } from '@danmasta/config';
+import { Config } from 'config';
 
 const config = new Config({
     dir: './test/config'
@@ -133,9 +137,9 @@ const config = new Config({
 export default await config.resolve();
 ```
 
-#### Use env variables with config for extra flexibility
+#### Use [env](https://github.com/danmasta/env) variables with config for extra flexibility
 ```js
-import env from '@danmasta/env';
+import env from 'env';
 
 // ./config/default.js
 export default {
