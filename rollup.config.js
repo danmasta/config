@@ -20,8 +20,8 @@ export default [
             resolve()
         ],
         external: [
-            '@danmasta/lo',
-            '@danmasta/lo/errors'
+            'lo',
+            'lo/errors'
         ]
     }
 ];
