@@ -72,7 +72,7 @@ You can pass config names as cmd arguments or env variables and they will be set
 node app --config staging
 ```
 ```bash
-NODE_ENV=ci,CONFIG=staging node app
+NODE_ENV=ci CONFIG=staging node app
 ```
 This will load both the default config and then the staging config. This makes it really easy to run and/or test your app with different configs in multiple environments
 
