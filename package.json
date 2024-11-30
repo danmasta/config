@@ -1,5 +1,6 @@
 {
   "name": "@danmasta/config",
+  "private": true,
   "version": "5.1.0",
   "author": "Daniel Smith <dannmasta@gmail.com>",
   "description": "Configuration helper for node apps",
@@ -39,6 +40,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/danmasta/config.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   },
   "dependencies": {
     "lo": "github:danmasta/lo#af3c167"
