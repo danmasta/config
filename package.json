@@ -1,7 +1,7 @@
 {
   "name": "@danmasta/config",
   "private": true,
-  "version": "5.1.0",
+  "version": "5.2.0",
   "author": "Daniel Smith <dannmasta@gmail.com>",
   "description": "Configuration helper for node apps",
   "license": "MIT",
