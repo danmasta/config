@@ -22,7 +22,7 @@ npm install config@danmasta/config --save
 ```
 Install a specific [version](https://github.com/danmasta/config/tags)
 ```bash
-npm install config@danmasta/config#v5.2.0 --save
+npm install config@danmasta/config#v0.0.1 --save
 ```
 
 Import or require the package in your app
