@@ -51,6 +51,7 @@ name | type | description
 `warn` | *`boolean`* | If true will write a message to `stderr` when a config file is not found. Default is `false`
 `throw` | *`boolean`* | If true will throw an error when a config file is not found. Default is `false`
 `exts` | *`string\|array`* | Which file extensions to use during file lookup. Default is `['.js', '.json', '.cjs', '.mjs']`
+`env` | *`string`* | Name of the environment file to load. This is the second config file loaded in the chain. Default is `undefined`
 
 ### Methods
 Name | Description
@@ -65,6 +66,7 @@ Env Variable | Cmd Arg | Description
 `CONFIG_GROUP` | config-group | Name of the config group file to load. This is a middle config file loaded in the chain. Default is `undefined`
 `CONFIG` | config | Name of the config file to load. This is a middle config file loaded in the chain. Default is `undefined`
 `CONFIG_ID` | config-id | Name of the config ID to load. This is the last config file loaded so it's the most specific and will override all others in the chain. Default is `undefined`
+`NODE_ENV` | node-env | Name of the environment file to load. This is the second config file loaded in the chain. Default is `undefined`
 
 #### Example
 You can pass config names as cmd arguments or env variables and they will be set as environment variables *before* config files are loaded. This means you can do things like:
